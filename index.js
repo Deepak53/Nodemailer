@@ -13,8 +13,8 @@ mongoose.connect("mongodb://localhost:27017/trybus");
 app.use(bodyparser.json());
 app.post('/signup', signup);
 app.post('/signin',verifytoken, signin);
-app.delete('/new/delete',deluser);
-app.patch('/patch',patchs)
+app.delete('/new/delete',verifytoken , deluser);
+app.patch('/patch',verifytoken ,patchs)
 
 
 app.listen(port , ()=>{
