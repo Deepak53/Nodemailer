@@ -1,5 +1,6 @@
 const usermodel = require('../model/user');
 const {generate} = require('../controller/token');
+const {mail} = require('../mail');
 
 
 const signup = async(req ,res)=>{
@@ -8,8 +9,25 @@ try{
        let user = await usermodel.findOne({_id : req.body._id});
     if(user) return res.status(404).json({msg : "login yourself"});
 
+    let Otp = GenerateOtp();
+    req.body.otp = Otp;
+    if(!Otp) return res.status(400).json(responseHandler( {},"not getting otp",400));
+
+
+
+    // await mail({
+    //     from : "deepaksingh2000131@gmail.com",
+    //     to : req.body.email,
+    //     subject: "Email Verification",
+    //     text: `Email Verification ok Otp ${Otp} `
+    // })
+
+
     user = await usermodel.create(req.body);
     console.log(user , "uiser after");
+
+
+
     const refreshToken = await generate(user._id);
     return res.status(200).json({
         refreshToken,
